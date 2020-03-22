@@ -1,7 +1,7 @@
 from terraform_ovh_dns_reconciliator import load_dns_entries
 
 def search_orphan(tfstate_content):
-    orphans = []
+    orphans = {}
 
     # Iterate over each tfstate entry
     for entry in tfstate_content:
@@ -16,6 +16,9 @@ def search_orphan(tfstate_content):
         # Remove current terraform ID
         dns_entries.remove(int(current_id))
         # Append current orphans
-        orphans.extend(dns_entries)
+        for dns_entry in dns_entries:
+            if zone not in orphans.keys():
+                orphans[zone] = []
+            orphans[zone].append(dns_entry)
 
     return orphans

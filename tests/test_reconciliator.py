@@ -3,6 +3,13 @@ import ovh
 from unittest import mock
 
 from terraform_ovh_dns_reconciliator import search_orphan
+def diff_orphan_list(a1, a2):
+    if a1.keys() != a2.keys():
+        return False
+    for k in a1.keys():
+        if a1[k].sort() != a2[k].sort():
+            return False
+    return True
 
 def test_detect_orphan_entries():
     with mock.patch.object(ovh, 'Client') as mocked_client:
@@ -20,7 +27,9 @@ def test_detect_orphan_entries():
 
         orphan_list = search_orphan(tfstate_content)
 
-        assert orphan_list == [9876543210]
+        assert diff_orphan_list(orphan_list, {
+            'hashicorp4noobs.fr': [9876543210],
+        })
 
 def test_detect_another_orphan_entries():
     with mock.patch.object(ovh, 'Client') as mocked_client:
@@ -49,7 +58,9 @@ def test_detect_another_orphan_entries():
 
         orphan_list = search_orphan(tfstate_content)
 
-        assert orphan_list.sort() == [3456789012, 6789012345].sort()
+        assert diff_orphan_list(orphan_list, {
+            'hashicorp4noobs.fr': [ 3456789012, 6789012345],
+        })
 
 def test_detect_another_simple_orphan_entries():
     with mock.patch.object(ovh, 'Client') as mocked_client:
@@ -78,4 +89,6 @@ def test_detect_another_simple_orphan_entries():
 
         orphan_list = search_orphan(tfstate_content)
 
-        assert orphan_list.sort() == [8901234567].sort()
+        assert orphan_list == {
+            'hashicorp4noobs.fr': [8901234567],
+        }
