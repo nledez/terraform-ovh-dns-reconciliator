@@ -5,3 +5,6 @@ htmlcov/
 venv/
 __pycache__/
 ovh.conf
+example/terraform/.terraform/
+example/terraform/terraform.tfstate*
+example/terraform/terraform.tfvars
