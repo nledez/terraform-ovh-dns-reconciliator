@@ -9,17 +9,18 @@ def load_dns_entries(zone, subdomain):
     return dns_entries
 
 def get_dns_entry_content(zone, id):
-    return {
-        'subdomain': 'entry-0',
-        'fieldtype': 'A',
-        'ttl': 3600,
-        'id': 5110317860,
-        'target': '127.0.0.1',
-        'zone': 'hashicorp4noobs.fr',
+    client = ovh.Client()
+    clean_entry = {}
+
+    entry = client.get('/domain/zone/{}/record/{}'.format(zone, id))
+
+    clean_entry = {
+        'subdomain': entry['subDomain'],
+        'fieldtype': entry['fieldType'],
+        'target': entry['target'],
+        'zone': entry['zone'],
+        'ttl': entry['ttl'],
+        'id': entry['id'],
     }
-    # "subDomain": "entry-0",
-    # "fieldType": "A",
-    # "ttl": 3600,
-    # "id": 5110317860,
-    # "target": "127.0.0.1",
-    # "zone": "hashicorp4noobs.fr",
+
+    return clean_entry
