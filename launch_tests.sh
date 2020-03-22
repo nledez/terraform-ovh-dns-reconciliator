@@ -1,2 +1,5 @@
 #!/bin/bash
-./venv/bin/ptw --onpass "terminal-notifier -message '✅' -title 'Test OK'" --onfail "terminal-notifier -message '🔥' -title 'Test KO'"
+source launch_config.sh
+
+./venv/bin/pytest $PYTEST_ARGS
+# --cov-config=.coveragerc
