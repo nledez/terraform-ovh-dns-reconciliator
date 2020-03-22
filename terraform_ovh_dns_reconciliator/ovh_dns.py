@@ -7,3 +7,19 @@ def load_dns_entries(zone, subdomain):
                          subDomain=subdomain)
 
     return dns_entries
+
+def get_dns_entry_content(zone, id):
+    return {
+        'subdomain': 'entry-0',
+        'fieldtype': 'A',
+        'ttl': 3600,
+        'id': 5110317860,
+        'target': '127.0.0.1',
+        'zone': 'hashicorp4noobs.fr',
+    }
+    # "subDomain": "entry-0",
+    # "fieldType": "A",
+    # "ttl": 3600,
+    # "id": 5110317860,
+    # "target": "127.0.0.1",
+    # "zone": "hashicorp4noobs.fr",
