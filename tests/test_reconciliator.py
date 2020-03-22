@@ -2,7 +2,8 @@ import ovh
 
 from unittest import mock
 
-from terraform_ovh_dns_reconciliator import search_orphan
+from terraform_ovh_dns_reconciliator import search_orphan, clean_orphans
+
 def diff_orphan_list(a1, a2):
     if a1.keys() != a2.keys():
         return False
@@ -92,3 +93,30 @@ def test_detect_another_simple_orphan_entries():
         assert orphan_list == {
             'hashicorp4noobs.fr': [8901234567],
         }
+
+def test_clean_entries():
+    with mock.patch.object(ovh, 'Client') as mocked_client:
+        mocked_client.return_value.delete.side_effect = None
+
+        clean_orphans({
+            'hashicorp4noobs.fr': [8901234567],
+        })
+
+        mocked_client.return_value.delete.assert_called_with(
+            '/domain/zone/hashicorp4noobs.fr/record/8901234567'
+        )
+
+def test_clean_another_entries():
+    with mock.patch.object(ovh, 'Client') as mocked_client:
+        mocked_client.return_value.delete.side_effect = None
+
+        clean_orphans({
+            'hashicorp4noobs.fr': [8901234567, 9012345678],
+        })
+
+        calls = [
+            mock.call('/domain/zone/hashicorp4noobs.fr/record/8901234567'),
+            mock.call('/domain/zone/hashicorp4noobs.fr/record/9012345678'),
+        ]
+
+        mocked_client.return_value.delete.assert_has_calls(calls)

@@ -1,4 +1,8 @@
+import ovh
+
 from terraform_ovh_dns_reconciliator import load_dns_entries
+from terraform_ovh_dns_reconciliator import delete_entry
+
 
 def search_orphan(tfstate_content):
     orphans = {}
@@ -22,3 +26,9 @@ def search_orphan(tfstate_content):
             orphans[zone].append(dns_entry)
 
     return orphans
+
+
+def clean_orphans(id_to_delete):
+    for zone in id_to_delete.keys():
+        for current_id in id_to_delete[zone]:
+            delete_entry(zone, current_id)

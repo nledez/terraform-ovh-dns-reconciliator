@@ -27,3 +27,9 @@ def get_dns_entry_content(zone, id):
     }
 
     return clean_entry
+
+
+def delete_entry(zone, current_id):
+    client = ovh.Client()
+
+    client.delete('/domain/zone/{}/record/{}'.format(zone, current_id))

@@ -2,7 +2,9 @@ import ovh
 
 from unittest import mock
 
-from terraform_ovh_dns_reconciliator import load_dns_entries, get_dns_entry_content
+from terraform_ovh_dns_reconciliator import load_dns_entries
+from terraform_ovh_dns_reconciliator import get_dns_entry_content
+from terraform_ovh_dns_reconciliator import delete_entry
 
 
 def test_search_dns_records_with_one_entry():
@@ -62,3 +64,13 @@ def test_get_another_entry_content():
             'target': '127.0.0.1',
             'zone': 'hashicorp4noobs.fr',
         }
+
+def test_delete_entry():
+    with mock.patch.object(ovh, 'Client') as mocked_client:
+        mocked_client.return_value.delete.side_effect = None
+
+        delete_entry('hashicorp4noobs.fr', 8901234567)
+
+        mocked_client.return_value.delete.assert_called_with(
+            '/domain/zone/hashicorp4noobs.fr/record/8901234567'
+        )
