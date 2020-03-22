@@ -1,12 +1,15 @@
 import ovh
 
-def load_dns_entries(zone, subdomain):
+
+def load_dns_entries(zone, fieldtype, subdomain):
     client = ovh.Client()
 
     dns_entries = client.get('/domain/zone/{}/record'.format(zone),
-                         subDomain=subdomain)
+                             fieldType=fieldtype,
+                             subDomain=subdomain)
 
     return dns_entries
+
 
 def get_dns_entry_content(zone, id):
     client = ovh.Client()

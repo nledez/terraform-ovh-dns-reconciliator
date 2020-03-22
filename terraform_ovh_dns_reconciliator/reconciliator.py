@@ -7,11 +7,12 @@ def search_orphan(tfstate_content):
     for entry in tfstate_content:
         # Extract needed information
         subdomain = entry['subdomain']
-        zone = entry['zone']
+        fieldtype = entry['fieldtype']
         current_id = entry['id']
+        zone = entry['zone']
 
         # Get current DNS entries ID
-        dns_entries = load_dns_entries(zone, subdomain)
+        dns_entries = load_dns_entries(zone, fieldtype, subdomain)
         # Remove current terraform ID
         dns_entries.remove(int(current_id))
         # Append current orphans
