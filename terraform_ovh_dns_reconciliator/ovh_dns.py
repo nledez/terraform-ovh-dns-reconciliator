@@ -33,3 +33,16 @@ def delete_entry(zone, current_id):
     client = ovh.Client()
 
     client.delete('/domain/zone/{}/record/{}'.format(zone, current_id))
+
+def build_dns_entry_dictionary(zone):
+    result = {}
+    result['by_subdomain'] = {}
+    result['by_id'] = {}
+    for id in load_dns_entries(zone, None, None):
+        entry =  get_dns_entry_content(zone, id)
+        subdomain = entry['subdomain']
+        if subdomain not in result['by_subdomain'].keys():
+            result['by_subdomain'][subdomain] = []
+        result['by_subdomain'][subdomain].append(entry)
+        result['by_id'][id] = entry
+    return result
